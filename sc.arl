@@ -72,7 +72,18 @@ record transfer_item {
 }
 
 entry %transfer (itxs : list<transfer_item>) {
-  fail(itxs)
+    for tx in itxs do
+    for td in tx.txs do begin
+      if caller <> tx.from_ then begin
+        (* check operator *)
+        do_require(operator.contains((caller,td.token_id_dest,tx.from_)),"FA2_NOT_OPERATOR");
+      end;
+      (* set token ownership *)
+      var toto : nat = td.token_amount_dest
+      // add to ledger
+      ledger.add_update((td.token_id_dest, td.to_dest), );
+    end done;
+  done
 }
 
 entry mint (tow : address) {
@@ -89,7 +100,7 @@ entry burn () {
   called by pharmacy
 
 }
-
+ 
 record balance_of_request {
   bo_owner : address;
   btoken_id : nat;
