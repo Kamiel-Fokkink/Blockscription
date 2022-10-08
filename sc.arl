@@ -79,16 +79,14 @@ entry %transfer (itxs : list<transfer_item>) {
         do_require(operator.contains((caller,td.token_id_dest,tx.from_)),"FA2_NOT_OPERATOR");
       end;
       (* set token ownership *)
-      var toto : nat = td.token_amount_dest
-      // add to ledger
-      ledger.add_update((td.token_id_dest, td.to_dest), );
+      ledger.add_update((td.token_id_dest, td.to_dest), {token_balance = td.token_amount_dest});
     end done;
   done
 }
 
 entry mint (tow : address) {
-  // called by doctor
   // require { fa2_r5: is_not_paused() }
+  called by doctor
 
   effect {
     ledger.add_update((next_token_id, tow), {token_balance = 1});
