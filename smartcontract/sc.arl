@@ -29,36 +29,8 @@ asset pharmacy identified by paddr to big_map {
 }
 
 entry update_operators (upl : list<or<operator_param, operator_param>>) {
-
+  fail(upl)
 }
-
-/*
-record operator_param {
-  opp_owner    : address;
-  opp_operator : address;
-  opp_token_id : nat
-} as ((owner, (operator, token_id)))
-
-enum update_op =
-| add_operator<operator_param>
-| remove_operator<operator_param>
-
-entry update_operators (upl : list<update_op>) {
-  require { fa2_r1 : is_not_paused() }
-  effect {
-    for up in upl do
-      match up with
-      | add_operator(param) ->
-        do_require(param.opp_owner = caller , CALLER_NOT_OWNER);
-        operator.put({ param.opp_operator; param.opp_token_id; param.opp_owner })
-      | remove_operator(param) ->
-        do_require(param.opp_owner = caller , CALLER_NOT_OWNER);
-        operator.remove((param.opp_operator, param.opp_token_id, param.opp_owner))
-      end;
-    done;
-  }
-}
-*/
 
 record transfer_destination {
   to_dest           : address;
@@ -79,7 +51,7 @@ entry %transfer (itxs : list<transfer_item>) {
         do_require(operator.contains((caller,td.token_id_dest,tx.from_)),"FA2_NOT_OPERATOR");
       end;
       (* set token ownership *)
-      ledger.add_update((td.token_id_dest, td.to_dest), {token_balance = td.token_amount_dest});
+      ledger.update((td.token_id_dest, td.to_dest), {token_balance = td.token_amount_dest});
     end done;
   done
 }
@@ -98,7 +70,23 @@ entry burn () {
   called by pharmacy
 
 }
- 
+
+entry addDoctor (doctorAddress : address) {
+  doctor.add({doctorAddress});
+}
+
+entry delDoctor () {
+
+}
+
+entry addPharma () {
+
+}
+
+entry delPharma () {
+
+}
+
 record balance_of_request {
   bo_owner : address;
   btoken_id : nat;
