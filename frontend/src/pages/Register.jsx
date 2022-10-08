@@ -2,10 +2,9 @@ import { Link as RouteLink } from 'react-router-dom';
 import { Button, Image, Link, Stack, Text, VStack } from '@chakra-ui/react';
 
 import colors from '../theme/foundations/colors';
-import prescription from '../assets/prescription.svg';
-import OutlineButton from '../components/OutlineButton';
+import register from '../assets/register.svg';
 
-const HomePage = () => (
+const RegisterPage = () => (
   <Stack
     direction={{ base: 'column-reverse', lg: 'row' }}
     wrap="wrap-reverse"
@@ -24,7 +23,7 @@ const HomePage = () => (
           bgClip="text"
           textAlign="center"
         >
-          BlockScription
+          Register
         </Text>
         <Text
           fontSize={{
@@ -38,29 +37,23 @@ const HomePage = () => (
           w="520px"
           maxW="90vw"
         >
-          Renew your medical prescriptions on Tezos Blockchain
+          Create your patient account
         </Text>
       </VStack>
       <VStack w={{ base: '90%', md: '496px' }}>
         <Link as={RouteLink} to="/register" w="100%">
           <Button variant="inline" w="100%">
-            I'm a new patient
+            Create my account
           </Button>
-        </Link>
-        <Link as={RouteLink} to="/login" w="100%">
-          <OutlineButton w="100%" content="Login" />
-        </Link>
-        <Link href="https://tezos.com" w="100%" isExternal>
-          <OutlineButton w="100%" content="Powered By Tezos" />
         </Link>
       </VStack>
     </VStack>
     <Image
-      src={prescription}
+      src={register}
       w={{ base: '320px', md: '420px', lg: '520px' }}
       maxW="90%"
     />
   </Stack>
 );
 
-export default HomePage;
+export default RegisterPage;
