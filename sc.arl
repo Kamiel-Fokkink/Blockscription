@@ -2,13 +2,13 @@ archetype fa2_basic(admin : address)
 
 variable next_token_id : nat = 0
 
-asset ledger identified by ltoken lowner to big_map {
+asset ledger identified by ltoken lowner {
   ltoken     : nat;
   lowner     : address;
   token_balance    : bool;
 }
 
-asset operator identified by oaddr otoken oowner to big_map {
+asset operator identified by oaddr otoken oowner {
   oaddr       : address;
   otoken      : nat;
   oowner      : address;
@@ -20,11 +20,11 @@ record operator_param {
   opp_token_id : nat
 } as ((owner, (operator, token_id)))
 
-asset doctor identified by daddr to big_map {
+asset doctor identified by daddr {
   daddr     : address;
 }
 
-asset pharmacy identified by paddr to big_map {
+asset pharmacy identified by paddr {
   paddr     : address;
 }
 
