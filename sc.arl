@@ -5,7 +5,7 @@ variable next_token_id : nat = 0
 asset ledger identified by ltoken lowner to big_map {
   ltoken     : nat;
   lowner     : address;
-  token_balance    : nat;
+  token_balance    : bool;
 }
 
 asset operator identified by oaddr otoken oowner to big_map {
@@ -52,7 +52,7 @@ entry mint (tow : address) {
   // require { fa2_r5: is_not_paused() }
 
   effect {
-    ledger.add_update((next_token_id, tow), {token_balance = 1});
+    ledger.add_update((next_token_id, tow), {token_balance = true});
     next_token_id += 1; 
   }
 }
@@ -91,6 +91,15 @@ entry delPharma (pharmaToDelete : address) {
 
   effect {
     pharmacy.remove(pharmaToDelete);
+  }
+}
+
+entry setValue (id : nat, owner : address, value : bool) {
+  called by pharmacy
+
+
+  effect {
+    ledger.update((id, owner), { token_balance = value });
   }
 }
 
