@@ -1,0 +1,108 @@
+archetype fa2_basic
+
+variable next_token_id : nat = 0
+
+asset ledger identified by ltoken lowner to big_map {
+  ltoken     : nat;
+  lowner     : address;
+  token_balance    : nat;
+}
+
+asset operator identified by oaddr otoken oowner to big_map {
+  oaddr       : address;
+  otoken      : nat;
+  oowner      : address;
+}
+
+record operator_param {
+  opp_owner    : address;
+  opp_operator : address;
+  opp_token_id : nat
+} as ((owner, (operator, token_id)))
+
+asset doctor identified by daddr to big_map {
+  daddr     : address;
+}
+
+asset pharmacy identified by paddr to big_map {
+  paddr     : address;
+}
+
+entry update_operators (upl : list<or<operator_param, operator_param>>) {
+
+}
+
+/*
+record operator_param {
+  opp_owner    : address;
+  opp_operator : address;
+  opp_token_id : nat
+} as ((owner, (operator, token_id)))
+
+enum update_op =
+| add_operator<operator_param>
+| remove_operator<operator_param>
+
+entry update_operators (upl : list<update_op>) {
+  require { fa2_r1 : is_not_paused() }
+  effect {
+    for up in upl do
+      match up with
+      | add_operator(param) ->
+        do_require(param.opp_owner = caller , CALLER_NOT_OWNER);
+        operator.put({ param.opp_operator; param.opp_token_id; param.opp_owner })
+      | remove_operator(param) ->
+        do_require(param.opp_owner = caller , CALLER_NOT_OWNER);
+        operator.remove((param.opp_operator, param.opp_token_id, param.opp_owner))
+      end;
+    done;
+  }
+}
+*/
+
+record transfer_destination {
+  to_dest           : address;
+  token_id_dest     : nat;
+  token_amount_dest : nat
+} as ((to_, (token_id, amount)))
+
+record transfer_item {
+  from_: address;
+  txs: list<transfer_destination>;
+}
+
+entry %transfer (itxs : list<transfer_item>) {
+  fail(itxs)
+}
+
+entry mint (tow : address) {
+  // called by doctor
+  // require { fa2_r5: is_not_paused() }
+
+  effect {
+    ledger.add_update((next_token_id, tow), {token_balance = 1});
+    next_token_id += 1; 
+  }
+}
+
+entry burn () {
+  called by pharmacy
+
+}
+
+record balance_of_request {
+  bo_owner : address;
+  btoken_id : nat;
+} as ((owner, token_id))
+
+record balance_of_response {
+  request : balance_of_request;
+  balance_ : nat;
+} as ((request, balance))
+
+getter balance_of (requests : list<balance_of_request>) : list<balance_of_response> {
+  return map(requests, br -> {
+    request = br;
+    balance_ = (ledger[(br.btoken_id, br.bo_owner)] ? 1 : 0)
+  })
+}
