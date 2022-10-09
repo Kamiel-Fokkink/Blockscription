@@ -8,8 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type UserRequestPrescritionRequest struct {
+	UserAdress         string `json:"user_adress" binding:"required"`
+	UserPrescriptionID string `json:"user_prescription_id" binding:"required"`
+	DoctorAddress      string `json:"doctor_address" binding:"required"`
+	New_Prescription   bool   `json:"new_prescription" binding:"required"`
+}
+
 func addUserRequestPrescription(c *gin.Context) {
-	var request models.UserRequestPrescrition
+	var request UserRequestPrescritionRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
