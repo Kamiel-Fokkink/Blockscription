@@ -29,7 +29,7 @@ asset pharmacy identified by paddr {
 }
 
 entry update_operators (upl : list<or<operator_param, operator_param>>) {
-  fail(upl)
+
 }
 
 record transfer_destination {
@@ -44,16 +44,21 @@ record transfer_item {
 }
 
 entry %transfer (itxs : list<transfer_item>) {
-    for tx in itxs do
-    for td in tx.txs do begin
-      if caller <> tx.from_ then begin
-        (* check operator *)
-        do_require(operator.contains((caller,td.token_id_dest,tx.from_)),"FA2_NOT_OPERATOR");
-      end;
-      (* set token ownership *)
-      ledger.update((td.token_id_dest, td.to_dest), {token_balance = token_balance});
-    end done;
-  done
+
+  called by doctor
+
+  effect {
+      for tx in itxs do
+      for td in tx.txs do begin
+        if caller <> tx.from_ then begin
+          (* check operator *)
+          do_require(operator.contains((caller,td.token_id_dest,tx.from_)),"FA2_NOT_OPERATOR");
+        end;
+        (* set token ownership *)
+        ledger.update((td.token_id_dest, td.to_dest), {token_balance = false});
+      end done;
+    done
+  }
 }
 
 entry mint (tow : address) {
