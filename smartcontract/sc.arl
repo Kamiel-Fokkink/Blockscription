@@ -2,6 +2,9 @@ archetype fa2_basic(admin : address)
 
 variable next_token_id : nat = 0
 
+//TODO: set bigmap metadata which indicate name, version .. ect of contract
+//TODO: set bigmap called token_metadata which store informations about prescription
+
 asset ledger identified by ltoken lowner {
   ltoken     : nat;
   lowner     : address;
